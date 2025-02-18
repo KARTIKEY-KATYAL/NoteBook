@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Layout, Shield } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import UploadPdfDialog from "./UloadPdfDialog";
 
 function SideBar() {
   return (
@@ -17,13 +18,15 @@ function SideBar() {
         />
         NoteBook
       </div>
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex flex-col items-center justify-center">
+         <UploadPdfDialog>
         <Button
-          className="text-2xl font-bold bg-green-950 mt-6 hover:bg-green-800 text-white px-9 py-6 transition-shadow w-full cursor-pointer"
+          className="text-2xl font-bold bg-green-950 mt-6 hover:bg-green-800 text-white px-9 py-6 transition-shadow w-[90%] cursor-pointer"
           aria-label="Upload PDF"
         >
           + Upload PDF
-        </Button>
+        </Button>       
+          </UploadPdfDialog>
         <div className="flex flex-col mt-6 w-full rounded-lg items-center justify-start">
           <div className="flex gap-2 hover:bg-emerald-300 items-center px-5 py-3 justify-center mt-4 mb-2 w-[95%] text-lg text-white hover:text-blue-950 font-semibold rounded-xl cursor-pointer">
             <Layout />
