@@ -14,21 +14,31 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useMutation } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { Loader2Icon } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/nextjs"; // Adjust for your auth system
+import { ToastContainer, toast } from "react-toastify";
+import { Bounce } from "react-toastify";
+import axios from "axios";
+import { ingest } from "@/convex/myActions";
+
 
 function UploadPdfDialog({ children }) {
+
+   const notify = (msg) => toast(msg);
+
   // Using Convex mutation hooks
   const generatePDFUploader = useMutation(api.fileStorage.generateUploadUrl);
   const insertFileEntry = useMutation(api.fileStorage.AddFileEntrytoDB);
   const getFileURLMutation = useMutation(api.fileStorage.getFileURL);
+  const embeddocument = useAction(api.myActions.ingest)
 
   const { user } = useUser(); // Authenticated user
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [open, setopen] = useState(false)
 
   // File selection function
   const onFileSelect = (event) => {
@@ -58,7 +68,7 @@ function UploadPdfDialog({ children }) {
     try {
       setLoading(true);
 
-      // Call Convex mutation to get an upload URL
+       // Call Convex mutation to get an upload URL
       const postUrl = await generatePDFUploader();
       console.log("Upload URL:", postUrl);
 
@@ -95,18 +105,39 @@ function UploadPdfDialog({ children }) {
         createdBy: user.primaryEmailAddress.emailAddress, // Ensure user exists
       });
 
-      alert("File uploaded successfully!");
+      notify("File uploaded successfully!"); 
+
+      // Call the API
+      const ApiResp = await axios.get("/api/pdf-loader?PdfURL=" + fileUrl);
+
+      console.log(ApiResp.data.result);
+      
+      const Embeddresult = await embeddocument({
+        textSplitter:ApiResp.data.result,
+        fileId: fileId
+      });
+      console.log(Embeddresult);
+      
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("Upload failed. Please try again.");
+      notify("Upload failed. Please try again.");
     } finally {
       setLoading(false);
+      setopen(false)
     }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={open}>
+      <DialogTrigger asChild>
+        <Button
+          className="text-2xl font-bold bg-green-950 mt-6 hover:bg-green-800 text-white px-9 py-6 transition-shadow w-[90%] cursor-pointer"
+          aria-label="Upload PDF"
+          onClick={() => setopen(true)}
+        >
+          + Upload PDF File
+        </Button>
+      </DialogTrigger>
       <DialogContent className="font-bold">
         <DialogHeader>
           <DialogTitle>Select PDF to Upload</DialogTitle>
@@ -149,6 +180,19 @@ function UploadPdfDialog({ children }) {
           </Button>
         </DialogFooter>
       </DialogContent>
+      <ToastContainer
+        position="top-center"
+        autoClose={4500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
     </Dialog>
   );
 }
