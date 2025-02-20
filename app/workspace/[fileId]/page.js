@@ -20,20 +20,20 @@ function Workspace() {
     
 
   return (
-    <div>
-      <WorkspaceHeader/>
-      <div className='grid grid-cols-2 gap-5 w-full '>
+    <div className="bg-[#4F6D7A]">
+      <WorkspaceHeader />
+      <div className="grid grid-cols-2 gap-5 w-full ">
         <div>
-            {/* TextEditor */}
-            <TextEditor/>
+          {/* TextEditor */}
+          <TextEditor />
         </div>
         <div>
-            {/* PdfViewer */}
-            <PdfViewer fileURL={FileInfo?.fileURL}/>
+          {/* PdfViewer */}
+          <PdfViewer fileURL={FileInfo?.fileURL} />
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Workspace
