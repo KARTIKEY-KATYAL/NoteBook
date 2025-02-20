@@ -167,6 +167,7 @@ function UploadPdfDialog({ children }) {
             <Button
               type="button"
               className="bg-blue-900 font-bold text-white hover:bg-blue-900"
+              onClick={()=>setopen(false)}
             >
               Close
             </Button>
@@ -182,7 +183,7 @@ function UploadPdfDialog({ children }) {
       </DialogContent>
       <ToastContainer
         position="top-center"
-        autoClose={4500}
+        autoClose={3000}
         hideProgressBar
         newestOnTop={false}
         closeOnClick
@@ -190,7 +191,6 @@ function UploadPdfDialog({ children }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
         transition={Bounce}
       />
     </Dialog>
