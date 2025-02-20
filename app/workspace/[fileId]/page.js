@@ -22,7 +22,7 @@ function Workspace() {
   return (
     <div>
       <WorkspaceHeader/>
-      <div className='flex w-full justify-between'>
+      <div className='grid grid-cols-2 gap-5 w-full '>
         <div>
             {/* TextEditor */}
             <TextEditor/>
